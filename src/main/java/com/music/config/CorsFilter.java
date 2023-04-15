@@ -7,12 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
-
-/**
- * @author mqz
- */
-
 @Configuration
 public class CorsFilter implements Filter {
     @Override
