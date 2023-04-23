@@ -1,8 +1,8 @@
-package com.dorm.applet.exception;
+package com.music.exception;
 
-import com.dorm.commons.api.ServiceResult;
-import com.dorm.commons.enums.BaseErrorCode;
-import com.dorm.commons.exception.ApplicationException;
+import com.music.common.api.ServiceResult;
+import com.music.common.enums.BaseErrorCode;
+import com.music.common.exception.ApplicationException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -17,9 +17,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Set;
 
-/**
- * @author mqz
- */
+
 @RestControllerAdvice
 @SuppressWarnings("unchecked")
 public class GlobalExceptionHandler {
@@ -53,7 +51,7 @@ public class GlobalExceptionHandler {
             resultBean.setMessage(message);
             return resultBean;
         }
-        resultBean.setResult(BaseErrorCode.PARAMETER_ERROR.getError() + ex.getMessage());
+        resultBean.setData(BaseErrorCode.PARAMETER_ERROR.getError() + ex.getMessage());
         return resultBean;
     }
 

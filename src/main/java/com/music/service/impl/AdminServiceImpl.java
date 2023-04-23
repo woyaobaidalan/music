@@ -17,7 +17,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private static final String SESSION_KEY = "name";
     @Override
     public ServiceResult login(HttpServletRequest request, Admin admin) {
-        log.info("this is imformation want {}", admin);
+        log.debug("admin的信息是: {}", admin);
         String name = admin.getName();
         String password = admin.getPassword();
 
@@ -27,7 +27,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         if(one == null) return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
 
-        if(one.getPassword().equals(admin.getPassword())){
+        if(one.getPassword().equals(password)){
             request.getSession().setAttribute(SESSION_KEY, name);
             return ServiceResult.success("登录成功");
         }else{
