@@ -11,7 +11,8 @@ public class MyPicConfig implements WebMvcConfigurer {
             "/img/singerPic/**",
             "/img/songListPic/**",
             "/img/songPic/**",
-            "/song/**"
+            "/song/**",
+            "/img/avatorImages/**",
 
     };
 
@@ -21,7 +22,8 @@ public class MyPicConfig implements WebMvcConfigurer {
                 .addResourceLocations(Constants.SINGER_PIC_PATH)
                 .addResourceLocations(Constants.SONGLIST_PIC_PATH)
                 .addResourceLocations(Constants.SONG_PATH)
-                .addResourceLocations(Constants.SONG_PIC_PATH);
+                .addResourceLocations(Constants.SONG_PIC_PATH)
+                .addResourceLocations(Constants.AVATOR_IMAGES_PATH);
 
     }
 }

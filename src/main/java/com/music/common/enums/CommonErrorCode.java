@@ -21,6 +21,14 @@ public enum CommonErrorCode implements ApplicationExceptionEnum {
     UPDATE_SONG_ERROR(507, "更新歌曲信息失败"),
     UPDATE_SONGPIC_ERROR(508, "更新歌曲图片失败"),
     UPDATE_SONGURL_ERROR(509, "更新歌曲失败"),
+    //user
+    EXIST_USERNAME(510, "用户名已存在"),
+    USERNAME_PASSWORD_ERROR(511, "用户名或密码错误"),
+    DELETE_CONSUME_ERROR(512, "删除用户失败"),
+    UPDATE_CONSUME_ERROR(513, "更新用户信息失败"),
+    UPLOAD_PASSWORD_ERROR(514, "密码输入错误"),
+    UPDATE_PASSWORD_ERROR(515, "修改密码失败"),
+    UPLOAD_PIC_ERROR(516, "上传失败"),
 
 
     ;
