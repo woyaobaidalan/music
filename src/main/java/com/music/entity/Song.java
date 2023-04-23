@@ -30,4 +30,5 @@ public class Song implements Serializable {
     private String lyric;
 
     private String url;
+
 }
