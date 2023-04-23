@@ -1,4 +1,4 @@
-package com.music.common.constant;
+package com.music.common.api;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

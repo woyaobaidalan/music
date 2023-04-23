@@ -1,6 +1,6 @@
 package com.music.config;
 
-import com.music.common.constant.Constants;
+import com.music.common.api.Constants;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

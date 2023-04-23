@@ -1,4 +1,4 @@
-package com.music.common.constant;
+package com.music.common.api;
 
 public class Constants {
     /* 歌曲图片，歌手图片，歌曲文件，歌单图片等文件的存放路径 */
