@@ -32,6 +32,10 @@ public enum CommonErrorCode implements ApplicationExceptionEnum {
     //收藏
     COLLECT_MUSIC_ERROR(517, "收藏失败"),
     DISCOLLECT_MUSIC_ERROR(518, "取消收藏失败"),
+    //评论等功能
+    COMMENT_ADD_ERROR(519, "评论失败"),
+    COMMENT_DELETE_ERROR(520, "删除成功"),
+    COMMENT_LIKEADD_ERROR(521, "点赞成功"),
 
 
     ;
