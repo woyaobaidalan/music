@@ -2,12 +2,14 @@ package com.music.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@TableName("consumer")
 public class Consumer implements Serializable {
 
     private static final Long serialVersionUID = 1L;
