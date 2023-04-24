@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class MyMetaObjecthandler implements MetaObjectHandler {
+public class MyMetaObjectHandler implements MetaObjectHandler {
 
     /*
     * 公共字段填充

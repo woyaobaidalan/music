@@ -43,12 +43,13 @@ public class ServiceResult<T> implements Serializable {
         return item;
     }
 
-    public static <T> ServiceResult<T> failure(String errorMessage) {
+    public static <T> ServiceResult<T> failure(String errorMessage, T result) {
         ServiceResult<T> item = new ServiceResult<T>();
         item.success = false;
         item.code = 500;
         item.message = errorMessage;
         item.type = "error";
+        item.data = result;
         return item;
     }
 

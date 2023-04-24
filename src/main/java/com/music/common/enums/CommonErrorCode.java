@@ -29,6 +29,9 @@ public enum CommonErrorCode implements ApplicationExceptionEnum {
     UPLOAD_PASSWORD_ERROR(514, "密码输入错误"),
     UPDATE_PASSWORD_ERROR(515, "修改密码失败"),
     UPLOAD_PIC_ERROR(516, "上传失败"),
+    //收藏
+    COLLECT_MUSIC_ERROR(517, "收藏失败"),
+    DISCOLLECT_MUSIC_ERROR(518, "取消收藏失败"),
 
 
     ;
