@@ -60,7 +60,9 @@ public class SongController {
      */
     @GetMapping("/detail")
     public ServiceResult songOfId(@RequestParam("id") Long id){
-        return ServiceResult.success(null, songService.getById(id));
+        LambdaQueryWrapper<Song> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Song::getId , id);
+        return ServiceResult.success(null, songService.list(lambdaQueryWrapper));
     }
 
     /**
@@ -81,7 +83,7 @@ public class SongController {
      * @return
      */
     @GetMapping("/singerName/detail")
-    public ServiceResult songOfSingerName(@RequestParam("name") Long singerName){
+    public ServiceResult songOfSingerName(@RequestParam("name") String singerName){
         LambdaQueryWrapper<Song> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.like(Song::getName , singerName);
         return ServiceResult.success(null, songService.list(lambdaQueryWrapper));
