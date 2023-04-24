@@ -36,6 +36,10 @@ public enum CommonErrorCode implements ApplicationExceptionEnum {
     COMMENT_ADD_ERROR(519, "评论失败"),
     COMMENT_DELETE_ERROR(520, "删除成功"),
     COMMENT_LIKEADD_ERROR(521, "点赞成功"),
+    //歌单功能
+    LISTSONG_ADD_ERROR(522, "添加失败"),
+    LISTSONG_DELETE_ERROR(523, "删除失败"),
+    LISTSONG_UPDATE_ERROR(526, "修改失败"),
 
 
     ;
