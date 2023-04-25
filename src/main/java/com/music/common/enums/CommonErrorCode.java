@@ -40,6 +40,9 @@ public enum CommonErrorCode implements ApplicationExceptionEnum {
     LISTSONG_ADD_ERROR(522, "添加失败"),
     LISTSONG_DELETE_ERROR(523, "删除失败"),
     LISTSONG_UPDATE_ERROR(526, "修改失败"),
+    //评价功能
+    RANKLIST_ADD_ERROR(527, "评价失败"),
+    RANKLIST_GET_ERROR(528, "尚未评分"),
 
 
     ;
