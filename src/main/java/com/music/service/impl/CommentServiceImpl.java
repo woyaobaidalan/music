@@ -18,7 +18,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         LambdaUpdateWrapper<Comment> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
         lambdaUpdateWrapper.eq(Comment::getId, comment.getId())
-                .set(Comment::getUp, comment.getUp());
+                .set(Comment::getUp, comment.getUp() + 1);
 
         boolean flag = update(lambdaUpdateWrapper);
         if (flag) {
