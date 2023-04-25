@@ -24,7 +24,6 @@ public class Collect implements Serializable {
 
     private Long songListId;
 
-    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
 }

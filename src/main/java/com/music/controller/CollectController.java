@@ -8,6 +8,9 @@ import com.music.service.CollectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+
 @Slf4j
 @RestController
 @RequestMapping("/collection")
@@ -24,9 +27,11 @@ public class CollectController {
      */
     @PostMapping("/add")
     public ServiceResult addCollection(@RequestBody Collect collect){
+        collect.setCreateTime(new Date());
         boolean res = collectService.save(collect);
         if (res) {
-            return ServiceResult.success("收藏成功");
+            log.info("添加的结果成功:{}", res);
+            return ServiceResult.success("收藏成功", true);
         }else{
             return ServiceResult.failure(CommonErrorCode.COLLECT_MUSIC_ERROR);
         }
