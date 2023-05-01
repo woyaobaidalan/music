@@ -6,6 +6,9 @@ import com.music.common.enums.CommonErrorCode;
 import com.music.entity.Song;
 import com.music.service.SongService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequestMapping("/song")
+@RequiresRoles(value = {"all", "administrator", "admin_singer"}, logical= Logical.OR)
 public class SongController {
 
     @Autowired
@@ -25,6 +29,7 @@ public class SongController {
      * @return ServiceResult
      */
     @PostMapping("/add")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult addSong(@ModelAttribute Song song, @RequestParam("file") MultipartFile mpfile){
         return songService.addSong(song, mpfile);
     }
@@ -35,6 +40,7 @@ public class SongController {
      * @return ServiceResult
      */
     @GetMapping("/delete")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult deleteSong(@RequestParam("id") Long id){
         boolean flag = songService.removeById(id);
         if(flag){
@@ -95,6 +101,7 @@ public class SongController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongMsg(@RequestBody Song song){
         boolean flag = songService.updateById(song);
         if(flag){
@@ -112,11 +119,13 @@ public class SongController {
      * @return
      */
     @PostMapping("/img/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Long id){
         return songService.updateSongPic(urlFile, id);
     }
 
     @PostMapping("/url/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Long id){
         return songService.updateSongUrl(urlFile, id);
     }

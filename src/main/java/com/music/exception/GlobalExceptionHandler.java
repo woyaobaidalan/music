@@ -3,6 +3,7 @@ package com.music.exception;
 import com.music.common.api.ServiceResult;
 import com.music.common.enums.BaseErrorCode;
 import com.music.common.exception.ApplicationException;
+import org.apache.shiro.ShiroException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -100,5 +101,15 @@ public class GlobalExceptionHandler {
         resultBean.setMessage(BaseErrorCode.PARAMETER_ERROR.getError() + " : " + errorMsg.toString());
         return resultBean;
     }
+
+
+    @ExceptionHandler(ShiroException.class)
+    public Object handleShiroException(ShiroException e) {
+        ServiceResult resultBean = new ServiceResult();
+        resultBean.setCode(BaseErrorCode.SHIRO_ERROR.getCode());
+        resultBean.setMessage(BaseErrorCode.SHIRO_ERROR.getError());
+        return resultBean;
+    }
+
 
 }

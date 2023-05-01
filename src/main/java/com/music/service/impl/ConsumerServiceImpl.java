@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.music.common.api.Constants;
 import com.music.common.api.ServiceResult;
 import com.music.common.enums.CommonErrorCode;
+import com.music.common.util.JwtUtils;
 import com.music.dao.ConsumerMapper;
 import com.music.dto.ConsumerDto;
 import com.music.entity.Consumer;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
@@ -42,7 +44,7 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
     }
 
     @Override
-    public ServiceResult loginStatus(Consumer consumer, HttpServletRequest httpServletRequest) {
+    public ServiceResult loginStatus(Consumer consumer, HttpServletResponse httpServletResponse) {
         log.info("登录信息是：{}", consumer);
         LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Consumer::getUsername, consumer.getUsername());
@@ -54,7 +56,7 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
 
         boolean flag = one.getPassword().equals(consumer.getPassword());
         if(flag){
-            httpServletRequest.getSession().setAttribute("username", consumer.getUsername());
+
 
             return ServiceResult.success("登录成功", list(lambdaQueryWrapper));
         }else{

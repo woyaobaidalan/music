@@ -5,6 +5,9 @@ import com.music.common.api.ServiceResult;
 import com.music.entity.Singer;
 import com.music.service.SingerService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +16,8 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/singer")
+@RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
+@CrossOrigin
 public class SingerController {
 
     @Autowired
@@ -66,11 +71,13 @@ public class SingerController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSingerMsg(@RequestBody Singer singer){
         return singerService.updateSinger(singer);
     }
 
     @PostMapping("/avatar/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") Long id){
         return singerService.updateSingerPic(avatorFile, id);
     }

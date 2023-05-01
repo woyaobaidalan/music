@@ -5,11 +5,14 @@ import com.music.common.api.ServiceResult;
 import com.music.common.enums.CommonErrorCode;
 import com.music.entity.Comment;
 import com.music.service.CommentService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comment")
+@RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
 public class CommentController {
 
     @Autowired

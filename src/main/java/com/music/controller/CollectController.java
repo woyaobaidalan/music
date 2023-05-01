@@ -6,6 +6,8 @@ import com.music.common.enums.CommonErrorCode;
 import com.music.entity.Collect;
 import com.music.service.CollectService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +16,8 @@ import java.util.Date;
 @Slf4j
 @RestController
 @RequestMapping("/collection")
-@CrossOrigin
+@RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
+
 public class CollectController {
 
     @Autowired

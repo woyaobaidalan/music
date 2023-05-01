@@ -8,15 +8,19 @@ import com.music.entity.Consumer;
 import com.music.entity.Song;
 import com.music.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/user")
+@RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
 public class ConsumerController {
 
     @Autowired
@@ -37,12 +41,12 @@ public class ConsumerController {
      * 用户登录功能
      *
      * @param consumer           包含username , password
-     * @param httpServletRequest session
+     * @param httpServletResponse session
      * @return
      */
     @PostMapping("/login/status")
-    public ServiceResult loginStatus(@RequestBody Consumer consumer, HttpServletRequest httpServletRequest) {
-        return consumerService.loginStatus(consumer, httpServletRequest);
+    public ServiceResult loginStatus(@RequestBody Consumer consumer, HttpServletResponse httpServletResponse) {
+        return consumerService.loginStatus(consumer, httpServletResponse);
     }
 
     /**

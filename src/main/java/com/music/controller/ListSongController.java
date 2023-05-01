@@ -5,11 +5,15 @@ import com.music.common.api.ServiceResult;
 import com.music.common.enums.CommonErrorCode;
 import com.music.entity.ListSong;
 import com.music.service.ListSongService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/listSong")
+@RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
 public class ListSongController {
 
     @Autowired
@@ -21,6 +25,7 @@ public class ListSongController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult addListSong(@RequestBody ListSong listSong){
         boolean flag = listSongService.save(listSong);
         if(flag){
@@ -36,6 +41,7 @@ public class ListSongController {
      * @return
      */
     @GetMapping("/delete")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult deleteListSong(@RequestParam("songId") Long songId){
         return listSongService.deleteListSong(songId);
     }

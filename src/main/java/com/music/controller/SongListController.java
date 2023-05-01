@@ -6,6 +6,9 @@ import com.music.common.enums.CommonErrorCode;
 import com.music.entity.SongList;
 import com.music.service.SongListService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +18,7 @@ import javax.websocket.server.PathParam;
 @Slf4j
 @RestController
 @RequestMapping("/songList")
+@RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
 public class SongListController {
 
     @Autowired
@@ -26,6 +30,7 @@ public class SongListController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult addSongList(@RequestBody SongList songList){
         log.info("添加的歌曲信息是：{}", songList);
         boolean flag = songListService.save(songList);
@@ -51,6 +56,7 @@ public class SongListController {
      * @return
      */
     @GetMapping("/delete")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult deleteSongList(@RequestParam("id") Long id){
         boolean flag = songListService.removeById(id);
         if(flag){
@@ -86,6 +92,7 @@ public class SongListController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongListMsg(@RequestBody SongList songList){
         return songListService.updateSongListMsg(songList);
     }
@@ -97,6 +104,7 @@ public class SongListController {
      * @return
      */
     @PostMapping("/img/update")
+    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongListPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") Long id){
         return songListService.updateSongListPic(avatorFile, id);
     }

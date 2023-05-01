@@ -1,12 +1,14 @@
 package com.music.config;
 
+import com.music.common.util.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+@Slf4j
 @Configuration
 public class CorsFilter implements Filter {
     @Override
@@ -23,6 +25,7 @@ public class CorsFilter implements Filter {
         if (headers != null) {
             response.setHeader("Access-Control-Allow-Headers", headers);
             response.setHeader("Access-Control-Expose-Headers", headers);
+
         }
 
         response.setHeader("Access-Control-Allow-Methods", "*");
