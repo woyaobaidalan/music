@@ -15,8 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
-@RequestMapping("/song")
-@RequiresRoles(value = {"all", "administrator", "admin_singer"}, logical= Logical.OR)
+@RequestMapping("/songs")
 public class SongController {
 
     @Autowired
@@ -30,6 +29,7 @@ public class SongController {
      */
     @PostMapping("/add")
     @RequiresPermissions(value = {"singer:write"})
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     public ServiceResult addSong(@ModelAttribute Song song, @RequestParam("file") MultipartFile mpfile){
         return songService.addSong(song, mpfile);
     }
@@ -41,6 +41,7 @@ public class SongController {
      */
     @GetMapping("/delete")
     @RequiresPermissions(value = {"singer:write"})
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     public ServiceResult deleteSong(@RequestParam("id") Long id){
         boolean flag = songService.removeById(id);
         if(flag){
@@ -55,6 +56,7 @@ public class SongController {
      * @return
      */
     @GetMapping
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     public ServiceResult allSong(){
         return ServiceResult.success(null, songService.list());
     }
@@ -65,6 +67,7 @@ public class SongController {
      * @return
      */
     @GetMapping("/detail")
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     public ServiceResult songOfId(@RequestParam("id") Long id){
         LambdaQueryWrapper<Song> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Song::getId , id);
@@ -77,6 +80,7 @@ public class SongController {
      * @return
      */
     @GetMapping("/singer/detail")
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     public ServiceResult songOfSingerId(@RequestParam("singerId") Long singerId){
         LambdaQueryWrapper<Song> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Song::getSingerId , singerId);
@@ -89,6 +93,7 @@ public class SongController {
      * @return
      */
     @GetMapping("/singerName/detail")
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     public ServiceResult songOfSingerName(@RequestParam("name") String singerName){
         LambdaQueryWrapper<Song> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.like(Song::getName , singerName);
@@ -101,6 +106,7 @@ public class SongController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresRoles(value = {"administrator", "all"}, logical= Logical.OR)
     @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongMsg(@RequestBody Song song){
         boolean flag = songService.updateById(song);
@@ -119,13 +125,11 @@ public class SongController {
      * @return
      */
     @PostMapping("/img/update")
-    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Long id){
         return songService.updateSongPic(urlFile, id);
     }
 
     @PostMapping("/url/update")
-    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Long id){
         return songService.updateSongUrl(urlFile, id);
     }

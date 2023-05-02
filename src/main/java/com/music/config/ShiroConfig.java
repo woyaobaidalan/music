@@ -88,7 +88,6 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setLoginUrl("/admin/login/status");
         shiroFilterFactoryBean.setSuccessUrl("/authorized");
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
-        log.info("arrive here");
 
         // 添加 jwt 专用过滤器，拦截除 /login 和 /logout 外的请求
         Map<String, Filter> filterMap = new LinkedHashMap<>();
@@ -96,8 +95,13 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filterMap);
 
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        filterChainDefinitionMap.put("/user/login/status", "anon"); // 可匿名访问
         filterChainDefinitionMap.put("/admin/login/status", "anon"); // 可匿名访问
-        filterChainDefinitionMap.put("/user/add", "anon"); // 可匿名访问
+        filterChainDefinitionMap.put("/admin/add", "anon"); // 可匿名访问
+        filterChainDefinitionMap.put("/img/**", "anon"); // 可匿名访问
+        filterChainDefinitionMap.put("/song/**", "anon"); // 可匿名访问
+        filterChainDefinitionMap.put("/singer/avatar/update", "anon"); // 可匿名访问
+        filterChainDefinitionMap.put("/songList/img/update", "anon"); // 可匿名访问
 
 
         filterChainDefinitionMap.put("/**", "jwtFilter"); // 需登录才能访问

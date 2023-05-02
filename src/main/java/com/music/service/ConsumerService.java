@@ -19,4 +19,6 @@ public interface ConsumerService extends IService<Consumer> {
     ServiceResult updatePassword(ConsumerDto consumer);
 
     ServiceResult updateUserPic(MultipartFile avatorFile, Long id);
+
+    ServiceResult userOfId(Long id);
 }

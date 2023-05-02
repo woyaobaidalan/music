@@ -7,7 +7,9 @@ import java.util.Set;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.music.common.util.JwtToken;
 import com.music.entity.Admin;
+import com.music.entity.Consumer;
 import com.music.service.AdminService;
+import com.music.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
@@ -31,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class JwtRealm extends AuthorizingRealm {
 
 	@Autowired
-	private AdminService adminService;
+	private ConsumerService consumerService;
  
 	/**
 	 * 限定这个 Realm 只处理我们自定义的 JwtToken
@@ -55,17 +57,15 @@ public class JwtRealm extends AuthorizingRealm {
 		String username = jwtToken.getPrincipal().toString();
 		// 查询数据库获取用户信息，此处使用 Map 来模拟数据库
 //		UserEntity user = ShiroRealm.userMap.get(username);
-		LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-		lambdaQueryWrapper.eq(Admin::getName, username);
-		Admin user = adminService.getOne(lambdaQueryWrapper);
+		LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+		lambdaQueryWrapper.eq(Consumer::getUsername, username);
+		Consumer user = consumerService.getOne(lambdaQueryWrapper);
 
-
-
- 
 		// 用户不存在
 		if (user == null) {
 			throw new UnknownAccountException("用户名或密码错误");
 		}
+
  
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, username, getName());
 		return info;
@@ -74,14 +74,14 @@ public class JwtRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		// 获取当前用户
-		Admin admin = (Admin) SecurityUtils.getSubject().getPrincipal();
+		Consumer user = (Consumer) SecurityUtils.getSubject().getPrincipal();
 
 
-		String permission = admin.getPermission();
+		String permission = user.getPermission();
 		Set<String> roles = new HashSet<>();
 		Set<String> perms = new HashSet<>();
 		//获取权限信息
-		roles.add(admin.getRoles());
+		roles.add(user.getRoles());
 		perms.addAll(Arrays.asList(permission.split(",")));
 
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();

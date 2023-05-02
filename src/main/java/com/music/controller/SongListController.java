@@ -18,7 +18,6 @@ import javax.websocket.server.PathParam;
 @Slf4j
 @RestController
 @RequestMapping("/songList")
-@RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
 public class SongListController {
 
     @Autowired
@@ -30,6 +29,7 @@ public class SongListController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresRoles(value = {"administrator","all"}, logical= Logical.OR)
     @RequiresPermissions(value = {"singer:write"})
     public ServiceResult addSongList(@RequestBody SongList songList){
         log.info("添加的歌曲信息是：{}", songList);
@@ -46,6 +46,7 @@ public class SongListController {
      * @return
      */
     @GetMapping()
+    @RequiresRoles(value = {"administrator","all"}, logical= Logical.OR)
     public ServiceResult allSongList(){
         return ServiceResult.success(null, songListService.list());
     }
@@ -56,6 +57,7 @@ public class SongListController {
      * @return
      */
     @GetMapping("/delete")
+    @RequiresRoles(value = {"administrator","all"}, logical= Logical.OR)
     @RequiresPermissions(value = {"singer:write"})
     public ServiceResult deleteSongList(@RequestParam("id") Long id){
         boolean flag = songListService.removeById(id);
@@ -72,6 +74,7 @@ public class SongListController {
      * @return
      */
     @GetMapping("/likeTitle/detail")
+    @RequiresRoles(value = {"administrator","all"}, logical= Logical.OR)
     public ServiceResult songListOfLikeTitle(@RequestParam("title")String title){
         return songListService.sonListOfLikeTitle(title);
     }
@@ -82,6 +85,7 @@ public class SongListController {
      * @return
      */
     @GetMapping("/style/detail")
+    @RequiresRoles(value = {"administrator","all"}, logical= Logical.OR)
     public ServiceResult songListOfStyle(@RequestParam("style")String style){
         return songListService.sonListOfLikeStyle(style);
     }
@@ -92,6 +96,7 @@ public class SongListController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresRoles(value = {"administrator","all"}, logical= Logical.OR)
     @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongListMsg(@RequestBody SongList songList){
         return songListService.updateSongListMsg(songList);
@@ -104,7 +109,6 @@ public class SongListController {
      * @return
      */
     @PostMapping("/img/update")
-    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSongListPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") Long id){
         return songListService.updateSongListPic(avatorFile, id);
     }

@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.music.common.util.JwtUtils;
 import com.music.dao.AdminMapper;
 import com.music.entity.Admin;
+import com.music.entity.Consumer;
 import com.music.service.AdminService;
 import com.music.common.api.ServiceResult;
 import com.music.common.enums.CommonErrorCode;
+import com.music.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -15,6 +17,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
+
+    @Autowired
+    private ConsumerService consumerService;
     private static final String SESSION_KEY = "name";
 //    @Override
 //    public ServiceResult login(HttpServletRequest request, Admin admin) {
@@ -53,6 +59,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(name, password);
+        LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Consumer::getUsername, name);
+        //admin和consumer在同一个表里，需要判断是否是管理员，防止错误登录
+        Consumer consumer = consumerService.getOne(lambdaQueryWrapper);
+
+        if(consumer == null || !consumer.getRoles().equals("administrator"))
+            return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
 
         try {
             subject.login(token);

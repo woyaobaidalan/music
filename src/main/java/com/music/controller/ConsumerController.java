@@ -20,7 +20,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
 public class ConsumerController {
 
     @Autowired
@@ -55,6 +54,7 @@ public class ConsumerController {
      * @return
      */
     @GetMapping
+    @RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
     public ServiceResult allUser() {
         return ServiceResult.success(null, consumerService.list());
     }
@@ -66,10 +66,10 @@ public class ConsumerController {
      * @return
      */
     @GetMapping("/detail")
+    @RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
     public ServiceResult userOfId(@RequestParam("id") Long id) {
-        LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Consumer::getId, id);
-        return ServiceResult.success(null, consumerService.list(lambdaQueryWrapper));
+        return consumerService.userOfId(id);
+
     }
 
     /**
@@ -79,6 +79,7 @@ public class ConsumerController {
      * @return ServiceResult
      */
     @GetMapping("/delete")
+    @RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
     public ServiceResult deleteUser(@RequestParam("id") Long id) {
         boolean flag = consumerService.removeById(id);
         if (flag) {
@@ -95,6 +96,7 @@ public class ConsumerController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
     public ServiceResult updateUserMsg(@RequestBody Consumer consumer) {
         return consumerService.updateUserMsg(consumer);
     }
@@ -105,6 +107,7 @@ public class ConsumerController {
      * @return
      */
     @PostMapping("/updatePassword")
+    @RequiresRoles(value = {"all", "administrator"}, logical= Logical.OR)
     public ServiceResult updatePassword(@RequestBody ConsumerDto consumer){
         return consumerService.updatePassword(consumer);
     }

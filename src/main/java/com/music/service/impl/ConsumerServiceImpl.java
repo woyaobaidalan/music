@@ -12,6 +12,12 @@ import com.music.dto.ConsumerDto;
 import com.music.entity.Consumer;
 import com.music.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -46,21 +53,28 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
     @Override
     public ServiceResult loginStatus(Consumer consumer, HttpServletResponse httpServletResponse) {
         log.info("登录信息是：{}", consumer);
+        String username = consumer.getUsername();
+        String password = consumer.getPassword();
+
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+
         LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Consumer::getUsername, consumer.getUsername());
-        Consumer one = getOne(lambdaQueryWrapper);
+        lambdaQueryWrapper.eq(Consumer::getUsername, username);
 
-        if(one == null){
-            return ServiceResult.failure(CommonErrorCode.USERNAME_PASSWORD_ERROR);
-        }
+        try {
+            subject.login(token);
+            String jwtToken = JwtUtils.sign(username, JwtUtils.SECRET);
+            httpServletResponse.setHeader(JwtUtils.AUTH_HEADER, jwtToken);
+            httpServletResponse.setHeader("Access-Control-Expose-Headers", JwtUtils.AUTH_HEADER);
+            return  ServiceResult.success("登录成功", list(lambdaQueryWrapper));
 
-        boolean flag = one.getPassword().equals(consumer.getPassword());
-        if(flag){
-
-
-            return ServiceResult.success("登录成功", list(lambdaQueryWrapper));
-        }else{
-            return ServiceResult.failure(CommonErrorCode.USERNAME_PASSWORD_ERROR);
+        } catch (UnknownAccountException uae) { // 账号不存在
+            return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
+        } catch (IncorrectCredentialsException ice) { // 账号与密码不匹配
+            return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
+        } catch (AuthenticationException ae) { // 其他身份验证异常
+            return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
         }
 
     }
@@ -137,5 +151,18 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
         }
 
         return ServiceResult.failure(CommonErrorCode.UPLOAD_PIC_ERROR);
+    }
+
+    @Override
+    public ServiceResult userOfId(Long id) {
+        LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Consumer::getId, id);
+
+        List<Consumer> list = list(lambdaQueryWrapper);
+
+        for(Consumer consumer : list){
+            consumer.setPassword("null");
+        }
+        return ServiceResult.success(null, list);
     }
 }

@@ -20,9 +20,9 @@ public class Song implements Serializable {
     private String name;
 
     private String introduction;
-    @TableField(fill = FieldFill.INSERT)
+//    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+//    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
     private String pic;

@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/singer")
-@RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
 @CrossOrigin
 public class SingerController {
 
@@ -29,6 +28,7 @@ public class SingerController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
     public ServiceResult addSinger(@RequestBody Singer singer){
         return singerService.addSinger(singer);
     }
@@ -39,6 +39,7 @@ public class SingerController {
      * @return
      */
     @GetMapping("/delete")
+    @RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
     public ServiceResult deleteSinger(@RequestParam("id") Long id){
         return singerService.deleteSinger(id);
     }
@@ -48,6 +49,7 @@ public class SingerController {
      * @return
      */
     @GetMapping()
+    @RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
     public ServiceResult allSinger() {
 //        return new ServiceResult<List<Singer>>(null, singerService.allSinger());
         return ServiceResult.success("成功", singerService.list());
@@ -59,6 +61,7 @@ public class SingerController {
      * @return
      */
     @GetMapping("/sex/detail")
+    @RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
     public ServiceResult singerOfSex(@RequestParam("sex") String gender){
         LambdaQueryWrapper<Singer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Singer::getSex, gender);
@@ -71,14 +74,15 @@ public class SingerController {
      * @return
      */
     @PostMapping("/update")
+    @RequiresRoles(value = {"administrator", "admin_singer", "all"}, logical= Logical.OR)
     @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSingerMsg(@RequestBody Singer singer){
         return singerService.updateSinger(singer);
     }
 
     @PostMapping("/avatar/update")
-    @RequiresPermissions(value = {"singer:write"})
     public ServiceResult updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") Long id){
+        log.info("更新了图片");
         return singerService.updateSingerPic(avatorFile, id);
     }
 

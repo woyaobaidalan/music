@@ -20,6 +20,10 @@ public class Consumer implements Serializable {
 
     private String password;
 
+    private String roles;
+
+    private String permission;
+
     private Byte sex;
 
     private String phoneNum;

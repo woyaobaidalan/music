@@ -141,8 +141,6 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             httpResponse.setHeader(JwtUtils.AUTH_HEADER, newToken);
             httpResponse.setHeader("Access-Control-Expose-Headers", JwtUtils.AUTH_HEADER);
         }
-            httpResponse.setHeader(JwtUtils.AUTH_HEADER, newToken);
-
 
         return true;
     }
@@ -163,9 +161,14 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected void fillCorsHeader(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
 
+        String headers = httpServletRequest.getHeader("Access-Control-Request-Headers");
+        if (headers != null) {
+            httpServletResponse.setHeader("Access-Control-Allow-Headers", headers);
+            httpServletResponse.setHeader("Access-Control-Expose-Headers", headers);
+
+        }
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-        httpServletResponse.setHeader("Content-Type","application/json;charset=UTF-8");
         httpServletResponse.setStatus(HttpStatus.OK.value());
     }
 

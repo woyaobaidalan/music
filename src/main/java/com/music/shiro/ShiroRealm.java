@@ -4,7 +4,9 @@ import java.util.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.music.entity.Admin;
+import com.music.entity.Consumer;
 import com.music.service.AdminService;
+import com.music.service.ConsumerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -31,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ShiroRealm extends AuthorizingRealm {
 
 	@Autowired
-	private AdminService adminService;
+	private ConsumerService consumerService;
 
 	/**
 	 * 限定这个 Realm 只处理 UsernamePasswordToken
@@ -49,9 +51,9 @@ public class ShiroRealm extends AuthorizingRealm {
 		// 从 AuthenticationToken 中获取当前用户
 		String username = (String) token.getPrincipal();
 		// 查询数据库获取用户信息，此处使用 Map 来模拟数据库
-		LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-		lambdaQueryWrapper.eq(Admin::getName, username);
-		Admin user = adminService.getOne(lambdaQueryWrapper);
+		LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+		lambdaQueryWrapper.eq(Consumer::getUsername, username);
+		Consumer user = consumerService.getOne(lambdaQueryWrapper);
 
 		// 用户不存在
 		if (user == null) {
@@ -80,11 +82,11 @@ public class ShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		// 获取当前用户
-		Admin admin = (Admin) SecurityUtils.getSubject().getPrincipal();
+		Consumer user = (Consumer) SecurityUtils.getSubject().getPrincipal();
 
-		String permission = admin.getPermission();
+		String permission = user.getPermission();
 		Set<String> roles = new HashSet<>();
-		roles.add(admin.getRoles());
+		roles.add(user.getRoles());
 
 		String[] split = permission.split(",");
 		Set<String> perms = new HashSet<>(Arrays.asList(split));
