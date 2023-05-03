@@ -1,14 +1,20 @@
 package com.music;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.music.common.util.JwtUtils;
 import com.music.entity.Song;
 import com.music.service.SongService;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.jupiter.api.Test;
+import org.redisson.Redisson;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class MusicApplicationTests {
@@ -44,6 +50,28 @@ class MusicApplicationTests {
 
         }
 
+    }
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    void RedisTest(){
+
+        String key = JwtUtils.AUTH_HEADER;
+        String value = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2ODMxMjUyNjIsInVzZXJuYW1lIjoiWWluIn0.WsI3mgGdUBFAuOLPLKzjS9tHSyt4-AFYyElwH189PtI";
+
+        String result = stringRedisTemplate.opsForValue().get("name");
+
+        if(result == null)System.out.println(result);
+
+        //        RBucket<String> bucket = redissonClient.getBucket(key);
+//
+//        bucket.set(value);
+//
+//        String result = bucket.get();
+//
+//        System.out.println("存储到 Redis 中的字符串为：" + result);
     }
 
 }

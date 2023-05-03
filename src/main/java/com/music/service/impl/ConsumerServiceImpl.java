@@ -18,6 +18,8 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,10 +28,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> implements ConsumerService {
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public ServiceResult add(Consumer consumer) {
         LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -65,6 +72,8 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
         try {
             subject.login(token);
             String jwtToken = JwtUtils.sign(username, JwtUtils.SECRET);
+            stringRedisTemplate.opsForValue().set(JwtUtils.AUTH_HEADER, jwtToken, JwtUtils.EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
             httpServletResponse.setHeader(JwtUtils.AUTH_HEADER, jwtToken);
             httpServletResponse.setHeader("Access-Control-Expose-Headers", JwtUtils.AUTH_HEADER);
             return  ServiceResult.success("登录成功", list(lambdaQueryWrapper));

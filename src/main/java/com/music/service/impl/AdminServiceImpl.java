@@ -18,38 +18,22 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
 
     @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
     private ConsumerService consumerService;
-    private static final String SESSION_KEY = "name";
-//    @Override
-//    public ServiceResult login(HttpServletRequest request, Admin admin) {
-//        log.debug("admin的信息是: {}", admin);
-//        String name = admin.getName();
-//        String password = admin.getPassword();
-//
-//        LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-//        lambdaQueryWrapper.eq(Admin::getName, name);
-//        Admin one = getOne(lambdaQueryWrapper);
-//
-//        if(one == null) return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
-//
-//        if(one.getPassword().equals(password)){
-//            request.getSession().setAttribute(SESSION_KEY, name);
-//            return ServiceResult.success("登录成功");
-//        }else{
-//            return ServiceResult.failure(CommonErrorCode.NOT_LOGIN);
-//        }
-//
-//    }
 
     @Override
     public ServiceResult login(HttpServletResponse response, Admin admin) {
@@ -70,6 +54,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         try {
             subject.login(token);
             String jwtToken = JwtUtils.sign(name, JwtUtils.SECRET);
+            //将token存入redis中，设置过期时间
+            log.info("token的值: {}", jwtToken);
+            stringRedisTemplate.opsForValue().set(JwtUtils.AUTH_HEADER, jwtToken, JwtUtils.EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
             response.setHeader(JwtUtils.AUTH_HEADER, jwtToken);
             response.setHeader("Access-Control-Expose-Headers", JwtUtils.AUTH_HEADER);
             return  ServiceResult.success("登录成功");

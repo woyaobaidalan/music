@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.music.common.util.JwtToken;
+import com.music.common.util.JwtUtils;
 import com.music.entity.Admin;
 import com.music.entity.Consumer;
 import com.music.service.AdminService;
@@ -24,6 +25,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 
 /**
@@ -34,6 +36,9 @@ public class JwtRealm extends AuthorizingRealm {
 
 	@Autowired
 	private ConsumerService consumerService;
+
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
  
 	/**
 	 * 限定这个 Realm 只处理我们自定义的 JwtToken
@@ -49,9 +54,18 @@ public class JwtRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
 			throws AuthenticationException {
+
 		JwtToken jwtToken = (JwtToken) authcToken;
+
 		if (jwtToken.getPrincipal() == null) {
 			throw new AccountException("JWT token参数异常！");
+		}
+		String token = (String) jwtToken.getCredentials();
+
+		String oldToken = stringRedisTemplate.opsForValue().get(JwtUtils.AUTH_HEADER);
+
+		if(oldToken == null || !token.equals(oldToken)){
+			throw new AccountException("token不正确");
 		}
 		// 从 JwtToken 中获取当前用户
 		String username = jwtToken.getPrincipal().toString();

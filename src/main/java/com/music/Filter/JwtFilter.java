@@ -9,6 +9,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,9 +19,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 @Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 前置处理
@@ -136,6 +142,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         String newToken = null;
         if (token instanceof JwtToken) {
             newToken = JwtUtils.refreshTokenExpired(token.getCredentials().toString(), JwtUtils.SECRET);
+            if(newToken != null){
+                stringRedisTemplate.opsForValue().set(JwtUtils.AUTH_HEADER, newToken, JwtUtils.EXPIRE_TIME, TimeUnit.MILLISECONDS);
+            }
         }
         if (newToken != null){
             httpResponse.setHeader(JwtUtils.AUTH_HEADER, newToken);
