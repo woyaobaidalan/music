@@ -8,19 +8,27 @@ import com.music.dao.SongMapper;
 import com.music.entity.Song;
 import com.music.service.SongService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+
 @Slf4j
 @Service
 public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements SongService {
 
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+
+
+
     private static final String PICPATH = "/img/songPic/tubiao.jpg";
     @Override
     public ServiceResult addSong(Song song, MultipartFile mpfile) {
-        log.info("上传歌曲");
+
 
         String fileName = mpfile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
@@ -29,8 +37,11 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             file1.mkdir();
         }
 
+
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
         String storeUrlPath = "/song/" + fileName;
+        log.info("filePath :{}", storeUrlPath);
+
 
         try {
             mpfile.transferTo(dest);

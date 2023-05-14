@@ -8,4 +8,8 @@ public interface CollectService extends IService<Collect> {
     ServiceResult deleteCollection(Long userId, Long songId);
 
     ServiceResult isCollection(Collect collect);
+
+    ServiceResult collectionOfUser(Long userId);
+
+    ServiceResult addCollection(Collect collect);
 }

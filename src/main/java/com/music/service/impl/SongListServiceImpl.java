@@ -35,9 +35,7 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
         LambdaQueryWrapper<SongList> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.like(SongList::getStyle, style);
 
-        SongList one = getOne(lambdaQueryWrapper);
-
-        return ServiceResult.success("返回成功", one);
+        return ServiceResult.success("返回成功", list(lambdaQueryWrapper));
     }
 
     @Override

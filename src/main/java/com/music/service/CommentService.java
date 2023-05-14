@@ -8,4 +8,10 @@ public interface CommentService extends IService<Comment> {
     ServiceResult commentOfLike(Comment comment);
 
     ServiceResult addComment(Comment comment);
+
+    ServiceResult commentOfSongId(Long songId);
+
+    ServiceResult commentOfSongListId(Long songListId);
+
+    ServiceResult deleteComment(Long id);
 }

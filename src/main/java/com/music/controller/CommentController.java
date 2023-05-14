@@ -36,12 +36,7 @@ public class CommentController {
      */
     @GetMapping("/delete")
     public ServiceResult deleteComment(@RequestParam("id") Long id){
-        boolean flag = commentService.removeById(id);
-        if(flag){
-            return ServiceResult.success("删除成功");
-        }else{
-            return ServiceResult.failure(CommonErrorCode.COMMENT_DELETE_ERROR);
-        }
+        return commentService.deleteComment(id);
     }
 
     /**
@@ -51,9 +46,10 @@ public class CommentController {
      */
     @GetMapping("/song/detail")
     public ServiceResult commentOfSongId(@RequestParam("songId") Long songId){
-        LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Comment::getSongId, songId);
-        return ServiceResult.success(null, commentService.list(lambdaQueryWrapper));
+//        LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        lambdaQueryWrapper.eq(Comment::getSongId, songId);
+//        return ServiceResult.success(null, );commentService.list(lambdaQueryWrapper)
+        return commentService.commentOfSongId(songId);
     }
 
     /**
@@ -63,9 +59,10 @@ public class CommentController {
      */
     @GetMapping("/songList/detail")
     public ServiceResult commentOfSongListId(@RequestParam("songListId") Long songListId){
-        LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Comment::getSongListId, songListId);
-        return ServiceResult.success(null, commentService.list(lambdaQueryWrapper));
+//        LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        lambdaQueryWrapper.eq(Comment::getSongListId, songListId);
+//        return ServiceResult.success(null, commentService.list(lambdaQueryWrapper));
+        return commentService.commentOfSongListId(songListId);
     }
 
     /**

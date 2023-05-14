@@ -42,8 +42,9 @@ public class RankListServiceImpl extends ServiceImpl<RankListMapper, RankList> i
         for(RankList rank : rankList){
             score += rank.getScore();
         }
-        score = score / rankList.size();
-
+        if(rankList.size() != 0){
+            score = score / rankList.size();
+        }
 
         return ServiceResult.success(null, score);
     }

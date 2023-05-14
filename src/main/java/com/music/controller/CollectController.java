@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,14 +31,7 @@ public class CollectController {
      */
     @PostMapping("/add")
     public ServiceResult addCollection(@RequestBody Collect collect){
-        collect.setCreateTime(new Date());
-        boolean res = collectService.save(collect);
-        if (res) {
-            log.info("添加的结果成功:{}", res);
-            return ServiceResult.success("收藏成功", true);
-        }else{
-            return ServiceResult.failure(CommonErrorCode.COLLECT_MUSIC_ERROR);
-        }
+        return collectService.addCollection(collect);
     }
 
     /**
@@ -69,9 +63,7 @@ public class CollectController {
      */
     @GetMapping("/detail")
     public ServiceResult collectionOfUser(@RequestParam("userId") Long userId){
-        LambdaQueryWrapper<Collect> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Collect::getUserId, userId);
-        return ServiceResult.success(null, collectService.list(lambdaQueryWrapper));
+        return collectService.collectionOfUser(userId);
     }
 
 

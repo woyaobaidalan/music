@@ -139,13 +139,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request,
                                      ServletResponse response) throws Exception {
         HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        HttpServletRequest httpRequest= WebUtils.toHttp(request);
         String newToken = null;
-        if (token instanceof JwtToken) {
-            newToken = JwtUtils.refreshTokenExpired(token.getCredentials().toString(), JwtUtils.SECRET);
-            if(newToken != null){
-                stringRedisTemplate.opsForValue().set(JwtUtils.AUTH_HEADER, newToken, JwtUtils.EXPIRE_TIME, TimeUnit.MILLISECONDS);
-            }
-        }
+//        if (token instanceof JwtToken) {
+//            newToken = JwtUtils.refreshTokenExpired(token.getCredentials().toString(), JwtUtils.SECRET);
+//            if(newToken != null){
+//                stringRedisTemplate.opsForValue().set(JwtUtils.AUTH_HEADER, newToken, JwtUtils.EXPIRE_TIME, TimeUnit.MILLISECONDS);
+//            }
+//        }
+        newToken = stringRedisTemplate.opsForValue().get(JwtUtils.AUTH_HEADER);
         if (newToken != null){
             httpResponse.setHeader(JwtUtils.AUTH_HEADER, newToken);
             httpResponse.setHeader("Access-Control-Expose-Headers", JwtUtils.AUTH_HEADER);

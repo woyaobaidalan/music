@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.music.common.api.Constants;
+import com.music.common.api.RedisConstant;
 import com.music.common.api.ServiceResult;
 import com.music.common.enums.CommonErrorCode;
 import com.music.common.util.JwtUtils;
@@ -19,6 +20,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +39,9 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Override
     public ServiceResult add(Consumer consumer) {
@@ -162,16 +168,29 @@ public class ConsumerServiceImpl extends ServiceImpl<ConsumerMapper, Consumer> i
         return ServiceResult.failure(CommonErrorCode.UPLOAD_PIC_ERROR);
     }
 
+    /**
+     * 返回指定id用戶
+     * @param id
+     * @return
+     */
     @Override
     public ServiceResult userOfId(Long id) {
+
+        List<Consumer> redisList = (List<Consumer>) redisTemplate.opsForValue().get(RedisConstant.CONSUMER_GETBYID_KEY + String.valueOf(id));
+        //判断从redis是否有数据
+        if(redisList != null) {
+            return ServiceResult.success(null, redisList);
+        }
+        //从数据库中获取用户数据
         LambdaQueryWrapper<Consumer> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Consumer::getId, id);
 
         List<Consumer> list = list(lambdaQueryWrapper);
 
-        for(Consumer consumer : list){
-            consumer.setPassword("null");
-        }
+        list.get(0).setPassword("");
+        //存入redis中
+        redisTemplate.opsForValue().set(RedisConstant.CONSUMER_GETBYID_KEY + String.valueOf(id), list);
+
         return ServiceResult.success(null, list);
     }
 }
