@@ -102,6 +102,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/song/**", "anon"); // 可匿名访问
         filterChainDefinitionMap.put("/singer/avatar/update", "anon"); // 可匿名访问
         filterChainDefinitionMap.put("/songList/img/update", "anon"); // 可匿名访问
+        filterChainDefinitionMap.put("/websocket/**", "anon"); // 可匿名访问
 
 
         filterChainDefinitionMap.put("/**", "jwtFilter"); // 需登录才能访问

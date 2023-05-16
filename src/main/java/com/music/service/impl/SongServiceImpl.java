@@ -21,7 +21,7 @@ import java.io.IOException;
 public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements SongService {
 
     @Autowired
-    private RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+    private RedisTemplate<Object, Object> redisTemplate;
 
 
 
