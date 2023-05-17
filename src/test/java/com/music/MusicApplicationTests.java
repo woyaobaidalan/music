@@ -2,24 +2,18 @@ package com.music;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.music.common.util.JwtUtils;
-import com.music.common.util.SerializeUtil;
 import com.music.entity.Consumer;
 import com.music.entity.Song;
 import com.music.service.ConsumerService;
 import com.music.service.SongService;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.jupiter.api.Test;
-import org.redisson.Redisson;
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class MusicApplicationTests {
